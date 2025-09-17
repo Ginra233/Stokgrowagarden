@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Grow A Garden Stock - Roblox Style</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+
+    /* Reset */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Fredoka One', cursive, Arial, sans-serif;
+      background: linear-gradient(135deg, #0b3d0b, #1a5a1a);
+      color: #d0f0d0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      user-select: none;
+    }
+
+    /* Header */
+    header {
+      width: 100%;
+      max-width: 960px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 30px;
+      padding: 10px 0;
+      border-bottom: 2px solid #3dbf3d;
+    }
+    header img {
+      width: 60px;
+      filter: drop-shadow(0 0 5px #00ff00);
+    }
+    header h1 {
+      font-size: 2.8rem;
+      color: #a0ff00;
+      text-shadow: 0 0 10px #00ff00;
+      flex-grow: 1;
+    }
+
+    /* Search box */
+    .search-container {
+      width: 100%;
+      max-width: 960px;
+      margin-bottom: 25px;
+    }
+    .search-container input {
+      width: 100%;
+      padding: 12px 20px;
+      font-size: 1.2rem;
+      border-radius: 30px;
+      border: none;
+      outline: none;
+      box-shadow: 0 0 10px #00ff00 inset;
+      background: rgba(0, 0, 0, 0.5);
+      color: #d0f0d0;
+      transition: box-shadow 0.3s ease;
+    }
+    .search-container input::placeholder {
+      color: #a0d0a0;
+    }
+    .search-container input:focus {
+      box-shadow: 0 0 20px #00ff00 inset;
+      background: rgba(0, 0, 0, 0.7);
+    }
+
+    /* Container */
+    .container {
+      width: 100%;
+      max-width: 960px;
+      background: rgba(0, 0, 0, 0.75);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 0 40px #00ff00;
+      backdrop-filter: blur(10px);
+      min-height: 300px;
+      margin-bottom: 40px;
+    }
+
+    /* Stock grid */
+    .stock-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+    }
+
+    /* Stock card */
+    .stock-item {
+      background: linear-gradient(145deg, #0f3d0f, #1a5a1a);
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 0 15px #00ff00;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: default;
+      position: relative;
+      overflow: hidden;
+      color: #d0f0d0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .stock-item:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px #00ff00;
+    }
+    .stock-item::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at center, rgba(0,255,0,0.15), transparent 70%);
+      animation: rotate 8s linear infinite;
+      z-index: 0;
+      border-radius: 50%;
+    }
+    @keyframes rotate {
+      0% { transform: rotate(0deg);}
+      100% { transform: rotate(360deg);}
+    }
+    .stock-item > * {
+      position: relative;
+      z-index: 1;
+    }
+    .stock-item h3 {
+      font-size: 1.6rem;
+      margin-bottom: 12px;
+      text-shadow: 0 0 5px #00ff00;
+      color: #a0ff00;
+    }
+    .stock-item p {
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+      text-shadow: 0 0 3px #004d00;
+      line-height: 1.3;
+    }
+    .stock-item .price {
+      font-weight: 700;
+      color: #c0ff00;
+      font-size: 1.3rem;
+      text-shadow: 0 0 8px #c0ff00;
+      margin-top: auto;
+      text-align: right;
+    }
+
+    /* Loading spinner */
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 150px;
+      color: #00ff00;
+      font-weight: 700;
+      font-size: 1.2rem;
+      text-shadow: 0 0 10px #00ff00;
+      gap: 15px;
+    }
+    .spinner {
+      border: 6px solid rgba(0, 255, 0, 0.2);
+      border-top: 6px solid #00ff00;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg);}
+      100% { transform: rotate(360deg);}
+    }
+
+    /* Empty & error messages */
+    .message {
+      text-align: center;
+      font-size: 1.3rem;
+      padding: 40px 20px;
+      color: #a0ff00;
+      text-shadow: 0 0 10px #00ff00;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 40px;
+      color: #00ff00;
+      text-shadow: 0 0 5px #00ff00;
+      user-select: none;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 400px) {
+      header h1 {
+        font-size: 2rem;
+      }
+      .stock-item h3 {
+        font-size: 1.3rem;
+      }
+      .stock-item p {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Roblox_Logo_2022.svg/120px-Roblox_Logo_2022.svg.png" alt="Roblox Logo" />
+    <h1>Grow A Garden Stock</h1>
+  </header>
+
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="Cari stok berdasarkan nama..." aria-label="Cari stok" />
+  </div>
+
+  <div class="container">
+    <div id="stockList" class="stock-list">
+      <div class="loading">
+        <div class="spinner"></div>
+        Memuat data stok...
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2024 Grow A Garden Stock - Roblox Style
+  </footer>
+
+  <script>
+    const apiStockUrl = 'https://api.sxtream.xyz/tools/growagarden-stock';
+    const stockList = document.getElementById('stockList');
+    const searchInput = document.getElementById('searchInput');
+    let stocks = [];
+
+    // Render stok ke halaman, dengan filter nama opsional
+    function renderStocks(filter = '') {
+      const filtered = stocks.filter(item =>
+        item.name?.toLowerCase().includes(filter.toLowerCase())
+      );
+
+      if (filtered.length === 0) {
+        stockList.innerHTML = `<p class="message">Stok tidak ditemukan untuk kata kunci "<strong>${filter}</strong>"</p>`;
+        return;
+      }
+
+      stockList.innerHTML = '';
+      filtered.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'stock-item';
+
+        card.innerHTML = `
+          <h3>${item.name || 'Nama tidak tersedia'}</h3>
+          <p><strong>Jumlah:</strong> ${item.quantity ?? 'N/A'}</p>
+          <p class="price">Rp${item.price ? item.price.toLocaleString() : 'N/A'}</p>
+          <p>${item.description || ''}</p>
+        `;
+
+        stockList.appendChild(card);
+      });
+    }
+
+    // Ambil data stok dari API
+    async function fetchStock() {
+      stockList.innerHTML = `
+        <div class="loading">
+          <div class="spinner"></div>
+          Memuat data stok...
+        </div>
+      `;
+
+      try {
+        const response = await fetch(apiStockUrl);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+        const data = await response.json();
+
+        if (!Array.isArray(data) || data.length === 0) {
+          stockList.innerHTML = '<p class="message">Tidak ada stok tersedia saat ini.</p>';
+          return;
+        }
+
+        stocks = data;
+        renderStocks();
+
+      } catch (error) {
+        stockList.innerHTML = `<p class="message" style="color:#ff4444;">Error: ${error.message}</p>`;
+      }
+    }
+
+    // Event listener pencarian realtime
+    searchInput.addEventListener('input', e => {
+      renderStocks(e.target.value.trim());
+    });
+
+    // Load data saat halaman siap
+    window.onload = fetchStock;
+  </script>
+</body>
+</html>
